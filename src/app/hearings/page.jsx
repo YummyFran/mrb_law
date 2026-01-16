@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import HearingService from '../../services/HearingService'
 import React, { useEffect, useState } from 'react'
 
@@ -57,7 +58,7 @@ const page = () => {
                     :
                     <div className='flex flex-col gap-2'>
                         {hearings.map((item) => (
-                            <div key={item.id} className="px-3 py-2 border rounded-lg bg-gray-50 flex flex-col gap-1">
+                            <Link href={`/hearings/${item.id}`} key={item.id} className="px-3 py-2 border rounded-lg bg-gray-50 flex flex-col gap-1">
                                 <div className="font-semibold text-lg">
                                     {item.title}
                                 </div>
@@ -79,7 +80,7 @@ const page = () => {
                                 >
                                     {item.status}
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
             }

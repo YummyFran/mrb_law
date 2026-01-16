@@ -5,6 +5,25 @@ import HearingService from '../../../services/HearingService'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
+const hearingStatusMap = {
+    scheduled: {
+        bg: 'bg-green-200',
+        text: 'text-green-700',
+    },
+    completed: {
+        bg: 'bg-gray-200',
+        text: 'text-gray-700',
+    },
+    postponed: {
+        bg: 'bg-yellow-200',
+        text: 'text-yellow-700',
+    },
+    cancelled: {
+        bg: 'bg-red-200',
+        text: 'text-red-700',
+    },
+};
+
 const page = () => {
     const { id } = useParams()
     const [originalHearing, setOriginalHearing] = useState({})
@@ -56,7 +75,7 @@ const page = () => {
     const handleSave = async () => {
         setSaving(true)
 
-        const [data, error] = await HearingService.updateHearing({ id, title: hearing.title, description: hearing.description })
+        const [data, error] = await HearingService.updateHearing({ id, title: hearing.title, description: hearing.description, status: hearing.status })
 
         if (!data.success || error) {
             setSaving(false)
@@ -76,14 +95,14 @@ const page = () => {
     if (!isLoading && !hearing.id) return <p>404</p>
     return (
         <div className='flex-1 px-6 py-6 overflow-y-auto'>
-            {isDeleteModalShowing && <DeleteModal text={"Are you sure you want to delete hearing?"} onClose={() => setIsDeleteModalShowing(false)} onDelete={handleDelete}/>}
+            {isDeleteModalShowing && <DeleteModal text={"Are you sure you want to delete hearing?"} onClose={() => setIsDeleteModalShowing(false)} onDelete={handleDelete} />}
             <div className='flex gap-4 items-center'>
                 <p className='mr-auto py-3'>Hearing #{hearing.id}</p>
                 {hasContentChanged && <button className='bg-blue-900 px-4 py-2 cursor-pointer rounded-full text-white disabled:opacity-5' onClick={handleSave} disabled={saving}>{saving ? "Saving changes" : "Save"}</button>}
                 <button className='text-sm cursor-pointer hover:text-red-500' onClick={() => setIsDeleteModalShowing(true)}>Delete</button>
             </div>
             <div>
-                <h1 className='text-2xl font-bold'><input type="text" className='outline-none field-sizing-content' name='title' value={hearing.title} onChange={handleChange}/></h1>
+                <h1 className='text-2xl font-bold'><input type="text" className='outline-none field-sizing-content' name='title' value={hearing.title} onChange={handleChange} /></h1>
                 <p className='text-m text-gray-500'>{hearing.hearing_type}</p>
                 <p className='py-4 text-lg'><textarea className='outline-none field-sizing-content' name='description' value={hearing.description} onChange={handleChange}></textarea></p>
 
@@ -96,6 +115,11 @@ const page = () => {
                 <p className='font-bold flex gap-4'>Court: <span className='font-normal'>{hearing.court}</span></p>
                 <p className='font-bold flex gap-4'>Location: <span className='font-normal'>{hearing.location}</span></p>
                 <p className='font-bold flex gap-4'>Hearing Date: <span className='font-normal'>{new Date(hearing.hearing_date).toLocaleString()}</span></p>
+                <div className='flex gap-2 mt-4'>
+                    {Object.entries(hearingStatusMap).map(([key, style]) => (
+                        <div key={key} className={`w-fit px-4 py-1 rounded-full cursor-pointer ${hearing.status == key ? style.bg : ""} ${hearing.status == key ? style.text : ''}`} onClick={() => setHearing(prev => ({ ...prev, status: key}))}>{key}</div>
+                    ))}
+                </div>
             </div>
         </div>
     )

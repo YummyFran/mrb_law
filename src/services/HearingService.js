@@ -62,13 +62,13 @@ class HearingService {
         }
     }
 
-    async updateHearing({ id, title, description }) {
+    async updateHearing({ id, title, description, status }) {
         try {
             const res = await fetch(`/api/hearings/${id}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: { "Content-Type": "application/json"},
-                body: JSON.stringify({ title, description })
+                body: JSON.stringify({ title, description, status })
             })
             const data = await res.json()
 

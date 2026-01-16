@@ -93,9 +93,9 @@ export async function PATCH(req, { params }) {
     }
 
     const body = await req.json();
-    const { title, description } = body;
+    const { title, description, status } = body;
 
-    if (!title && !description) {
+    if (!title && !description && !status) {
         return NextResponse.json(
             { success: false, message: "Nothing to update" },
             { status: 400 }
@@ -143,6 +143,11 @@ export async function PATCH(req, { params }) {
         if (description) {
             fields.push("description = ?");
             values.push(description);
+        }
+
+        if(status) {
+            fields.push("status = ?")
+            values.push(status)
         }
 
         values.push(hearingId); // For WHERE clause
