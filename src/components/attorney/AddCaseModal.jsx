@@ -72,14 +72,14 @@ export default function AddCaseModal({ onClose, sideEffect }) {
     }
 
     const fetchClients = async () => {
-        const [data, error] = await ClientService.getTotalClients()
+        const [data, error] = await ClientService.getAllClients()
 
         if (!data.success || error) {
             console.log(data.message || error.message)
             return
         }
 
-        setClients(data.totalClients)
+        setClients(data.allClients)
     }
 
     useEffect(() => {

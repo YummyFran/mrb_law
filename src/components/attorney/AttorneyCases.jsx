@@ -51,10 +51,10 @@ const AttorneyCases = () => {
 
     return (
         <main className='p-8'>
-            <h2 className="mb-4 text-2xl font-bold">My Cases</h2>
+            <h2 className="mb-4 text-2xl font-bold">Cases</h2>
             {
                 isCasesLoading ? (
-                    <p className="text-sm text-gray-500">Loading hearings...</p>
+                    <p className="text-sm text-gray-500">Loading cases...</p>
                 ) :
                     cases.length === 0 ? (
                         <p className="text-gray-500">No cases found.</p>
